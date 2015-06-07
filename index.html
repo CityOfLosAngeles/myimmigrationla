@@ -18,8 +18,7 @@
     <link href="css/freelancer.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">    <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -88,24 +87,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-12">
-				       <table id="example">
-				          <thead>
-				            <tr>
-								<th>Date</th>
-								<th>Organization</th>
-								<th>Type</th>
-								<th>Time</th>
-								<th>Address</th>
-								<th>Contact</th>
-					    </tr>
-					   </thead>
-				           <tbody>
-					   </tbody>
-					</table>
-					
-                </div>
-
+				<div id="example"></div>
             </div>
         </div>
     </section>
@@ -222,42 +204,35 @@
 
     <!-- jQuery -->
     <script src="js/jquery.js"></script>
-	   <script src="https://cdn.datatables.net/1.10.7/js/jquery.dataTables.min.js"> </script>
-	 <script type="text/javascript">
-	// Author: Ed Donohue
-	// Purpose:
-	// This is a very simple example of how to use client side technology to interact with the Socrata SODA API.
-	// In this example I am using jQuery and the jQuery plugin dataTables.
-	// There are a lot more capabilities in terms of filtering, etc but this little diddy should help get you started.
-	// I encourage all developers to keep data.ny.gov in mind as a very useful datastore for storing and using public 
-	// viewable data rather than stuffing it in out of reach data bases. 
-	// For more information about Socrata SODA go here: http://dev.socrata.com/consumers/getting-started
-	// Also keep in mind this approach is not limited to ny.data.gov and can be used for any instance of Socrata 
-	// like data.gov
-
-	// Tell datatable what HTML table we want to use
-	$('#example').dataTable();			
-
-	// Construct a SODA query string - I'm using the farmers market data for my experiment
+	<script type="text/javascript">
 	url = 'https://data.lacity.org/resource/ghu5-z54x.json?$where=date_of_event%20between%20%272015-06-01T12:00:00%27%20and%20%272015-10-10T14:00:00%27';
 
-	// Use jQuery Ajax Awesomeness to acquire data from data.ny.gov (Socrata)
-	$.getJSON(url, function(data, textstatus) {
-	      // Loop over result set
-	      $.each(data, function(i, column) {
-	         // for each json record, add a row to the HTML table
-	         $('#example').dataTable().fnAddData( [
-		       column.date_of_event,
-		       column.organization,
-		       column.notes,
-			   column.start_time,
-			   column.location_address,
-			   column.contact]
-	         );
-	      }); // end $.each
-	}); // end $.getJSON
-	
-	</script>
+// Use jQuery Ajax Awesomeness to acquire data from data.ny.gov (Socrata)
+$.getJSON(url, function(data) {
+    var html = '';
+    $.each(data, function(key, value){
+        html += '<div class="col-lg-12">';
+        html += '<div class="col-lg-6">';
+        html += '<h4>'+value.organization+'</h4>';
+        html += '<h5>'+value.notes+'</h5>';
+        html += '<a href="https://www.google.com/maps/place/'+value.location_address+'"><i class="fa fa-map-marker icon-2x"></i></a>';
+		
+        html += '</div>';
+        html += '<div class="col-lg-4">';
+        html += '<h4>'+value.date_of_event.substr(0, 10)+'</h4>';
+        html += '<h5>'+value.language+'</h5>';
+        html += '</div>';
+        html += '<div class="col-lg-2">';
+        html += '<h4><a href="tel:'+value.contact+'"><i class="fa fa-phone  icon-2x"></i></a></h4>';
+        html += '</div>';
+		html += '<hr>';
+        html += '</div>';
+
+
+    });
+$('#example').html(html);
+}); // end $.getJSON
+</script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
